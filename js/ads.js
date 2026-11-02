@@ -1,10 +1,7 @@
 /**
- * MODULE PUBLICITAIRE START.IO (App ID: 210453717)
- * Gère les formats :
- * 1. BANNER Ads (Bannière d'accueil & lecteur)
- * 2. NATIVE Ads (Carte sponsorisée intégrée dans la grille de documents)
- * 3. IN-CHAT Ads (Widget flottant interactif de message sponsorisé)
- * 4. REWARDED VIDEO Ads (Vidéo récompensée avec déblocage de fonctionnalités)
+ * MODULE PUBLICITAIRE PROFESSIONNEL
+ * Affichage sobre et conforme aux directives des stores (Amazon Appstore & Google Play)
+ * Étiquetage standard « Sponsorisé » / « Sponsored » sans mention technique intrusive.
  */
 
 (function () {
@@ -24,6 +21,10 @@
     closeFloatingAd: closeInChatAd
   };
 
+  function isEnglish() {
+    return (document.documentElement.lang === 'en');
+  }
+
   function initAds() {
     setupBannerAds();
     setupNativeAdCard();
@@ -32,13 +33,12 @@
     setupStartIoWebSdk();
   }
 
-  // 1. CHARGEMENT DU SDK WEB START.IO
+  // 1. CHARGEMENT TECHNIQUE DU SDK START.IO
   function setupStartIoWebSdk() {
     try {
       window.startio_app_id = STARTIO_CONFIG.appId;
       window.startapp_app_id = STARTIO_CONFIG.appId;
 
-      // Charge le script Start.io officiel si disponible
       const script = document.createElement('script');
       script.type = 'text/javascript';
       script.async = true;
@@ -52,43 +52,57 @@
     }
   }
 
-  // 2. BANNER ADS
+  // 2. BANNER ADS (Bannière Standard)
   function setupBannerAds() {
     const bannerContainer = document.getElementById('startio-ad-banner');
     if (!bannerContainer) return;
 
+    const en = isEnglish();
+    const badgeText = en ? 'Sponsored' : 'Sponsorisé';
+    const titleText = en ? 'Recommended Services & Partner Tools' : 'Découvrez nos applications & services partenaires';
+    const subText = en ? 'Curated selection for Smart TV & Tablet' : 'Sélection exclusive pour Smart TV et tablette';
+    const ctaText = en ? 'Learn More ►' : 'En savoir plus ►';
+
     bannerContainer.innerHTML = `
-      <div class="ad-banner-box" tabindex="0" role="complementary" aria-label="Publicité Start.io">
-        <div class="ad-banner-badge">Sponsorisé • Start.io</div>
+      <div class="ad-banner-box" tabindex="0" role="complementary" aria-label="${badgeText}">
+        <div class="ad-banner-badge">📢 ${badgeText}</div>
         <div class="ad-banner-content">
           <div class="ad-banner-icon">🚀</div>
           <div class="ad-banner-text">
-            <strong>Découvrez les meilleures applications & services</strong>
-            <span>Sélection exclusive pour Android TV & Tablette</span>
+            <strong>${titleText}</strong>
+            <span>${subText}</span>
           </div>
           <a href="https://portal.start.io/" target="_blank" rel="noopener sponsored" class="ad-banner-cta" tabindex="0">
-            Explorer ►
+            ${ctaText}
           </a>
         </div>
       </div>
     `;
   }
 
-  // 3. NATIVE ADS (Intégré dans la grille des documents)
+  // 3. NATIVE ADS (Carte intégrée dans la bibliothèque)
   function setupNativeAdCard() {
     const list = document.getElementById('recent-list');
     if (!list) return;
 
-    // Observeur pour insérer la carte native après le rendu des récents
     const observer = new MutationObserver(() => {
       if (document.getElementById('startio-native-ad-card')) return;
+
+      const en = isEnglish();
+      const badgeText = en ? 'SPONSORED' : 'SPONSORISÉ';
+      const cardTitle = en ? 'Recommended Tools & Utilities' : 'Outils & Utilitaires Recommandés';
+      const cardSub = en ? 'Verified Partner' : 'Partenaire Vérifié';
+      const cardDesc = en 
+        ? 'Enhance your reading productivity with recommended tools designed for TV & tablet.' 
+        : 'Optimisez votre productivité de lecture avec des outils recommandés pour grand écran et tablette.';
+      const ctaBtn = en ? 'Discover' : 'Découvrir';
 
       const adCard = document.createElement('div');
       adCard.id = 'startio-native-ad-card';
       adCard.className = 'doc-card ad-native-card';
       adCard.setAttribute('tabindex', '0');
       adCard.setAttribute('role', 'article');
-      adCard.setAttribute('aria-label', 'Annonce sponsorisée Start.io');
+      adCard.setAttribute('aria-label', badgeText);
 
       adCard.innerHTML = `
         <div class="doc-card-top">
@@ -96,22 +110,20 @@
             <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
           </div>
           <div class="doc-meta">
-            <div class="ad-badge-native">SPONSORISÉ • START.IO</div>
-            <h4 class="doc-title" style="color: #60a5fa;">Outils & Guides Recommandés</h4>
+            <div class="ad-badge-native">📢 ${badgeText}</div>
+            <h4 class="doc-title" style="color: #60a5fa;">${cardTitle}</h4>
             <div class="doc-info">
-              <span>App ID : ${STARTIO_CONFIG.appId}</span>
-              <span>•</span>
-              <span>Partenaire vérifié</span>
+              <span>${cardSub}</span>
             </div>
           </div>
         </div>
         <div class="ad-native-body">
-          <p>Boostez votre expérience de lecture avec les utilitaires partenaires sélectionnés pour Android TV & Tablette.</p>
+          <p>${cardDesc}</p>
         </div>
         <div class="doc-card-bottom">
-          <span class="doc-tag" style="color: #38bdf8;">START.IO NATIVE</span>
+          <span class="doc-tag" style="color: #38bdf8;">${badgeText}</span>
           <a href="https://portal.start.io/" target="_blank" rel="noopener sponsored" class="btn btn-outline" style="min-height: 32px; padding: 0 12px; font-size: 0.8rem; text-decoration: none;">
-            Installer
+            ${ctaBtn}
           </a>
         </div>
       `;
@@ -128,37 +140,44 @@
     observer.observe(list, { childList: true });
   }
 
-  // 4. IN-CHAT ADS / FLOATING SPONSORED MESSAGE
+  // 4. IN-CHAT ADS (Bulle / Message Partenaire)
   function setupInChatAdWidget() {
     if (document.getElementById('startio-inchat-widget')) return;
 
+    const en = isEnglish();
     const widget = document.createElement('div');
     widget.id = 'startio-inchat-widget';
     widget.className = 'inchat-ad-widget';
     widget.setAttribute('role', 'complementary');
-    widget.setAttribute('aria-label', 'Message sponsorisé');
+
+    const bubbleLabel = en ? 'Partner Offer' : 'Offre Partenaire';
+    const popoverTitle = en ? '📢 Featured Partner' : '📢 Offre Partenaire';
+    const popoverBody = en 
+      ? 'Discover special partner offers and features optimized for your connected devices.' 
+      : 'Découvrez des offres et fonctionnalités partenaires exclusives pour vos appareils connectés.';
+    const popoverCta = en ? 'View Offer' : 'Découvrir';
 
     widget.innerHTML = `
-      <div class="inchat-bubble" id="inchat-bubble" tabindex="0" title="Message sponsorisé">
+      <div class="inchat-bubble" id="inchat-bubble" tabindex="0" title="${bubbleLabel}">
         <span class="inchat-pulse"></span>
-        <span class="inchat-icon">💬</span>
-        <span class="inchat-label">Offre Partenaire</span>
+        <span class="inchat-icon">💡</span>
+        <span class="inchat-label">${bubbleLabel}</span>
       </div>
       <div class="inchat-popover view-hidden" id="inchat-popover">
         <div class="inchat-header">
           <div class="inchat-header-title">
-            <span>📢 Annonce Start.io</span>
+            <span>${popoverTitle}</span>
           </div>
-          <button class="doc-delete-btn" id="btn-close-inchat" title="Fermer" aria-label="Fermer l'annonce">
+          <button class="doc-delete-btn" id="btn-close-inchat" title="Fermer" aria-label="Fermer">
             <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
           </button>
         </div>
         <div class="inchat-body">
-          <p>Profitez des offres exclusives Start.io compatibles avec vos appareils connectés et votre TV Box.</p>
+          <p>${popoverBody}</p>
         </div>
         <div class="inchat-footer">
           <a href="https://portal.start.io/" target="_blank" rel="noopener sponsored" class="btn btn-primary" style="font-size: 0.85rem; padding: 6px 14px; text-decoration: none;" tabindex="0">
-            Découvrir l'offre
+            ${popoverCta}
           </a>
         </div>
       </div>
@@ -188,10 +207,9 @@
       popover.classList.add('view-hidden');
     });
 
-    // Affichage automatique du message après 5 secondes
     setTimeout(() => {
       popover.classList.remove('view-hidden');
-    }, 5000);
+    }, 6000);
   }
 
   function closeInChatAd() {
@@ -199,21 +217,22 @@
     if (popover) popover.classList.add('view-hidden');
   }
 
-  // 5. REWARDED VIDEO ADS
+  // 5. REWARDED VIDEO ADS (Vidéo Récompensée)
   function setupRewardedAdButton() {
     const headerRight = document.querySelector('.header-right');
     if (!headerRight || document.getElementById('btn-rewarded-ad')) return;
 
+    const en = isEnglish();
     const rewardBtn = document.createElement('button');
     rewardBtn.id = 'btn-rewarded-ad';
     rewardBtn.className = 'btn btn-outline';
     rewardBtn.style.color = '#fbbf24';
     rewardBtn.style.borderColor = 'rgba(251, 191, 36, 0.4)';
     rewardBtn.setAttribute('tabindex', '0');
-    rewardBtn.setAttribute('title', 'Regarder une vidéo récompensée Start.io');
+    rewardBtn.setAttribute('title', en ? 'Watch a partner video to unlock VIP bonuses' : 'Regarder une vidéo partenaire pour débloquer un bonus VIP');
     rewardBtn.innerHTML = `
       <span>🎁</span>
-      <span>Bonus VIP</span>
+      <span>${en ? 'VIP Bonus' : 'Bonus VIP'}</span>
     `;
 
     rewardBtn.addEventListener('click', showRewardedVideoModal);
@@ -221,6 +240,14 @@
   }
 
   function showRewardedVideoModal() {
+    const en = isEnglish();
+    const modalTitle = en ? '🎬 Partner Video Bonus' : '🎬 Vidéo Partenaire (Bonus)';
+    const screenTitle = en ? 'Playing partner announcement...' : 'Visionnage de l’annonce partenaire...';
+    const screenDesc = en 
+      ? 'Watch this short partner announcement to unlock your VIP reader bonus!' 
+      : 'Regardez cette courte annonce partenaire pour débloquer votre bonus VIP de lecture !';
+    const skipLabel = en ? 'Skip in' : 'Passer dans';
+
     if (document.getElementById('rewarded-ad-modal')) {
       document.getElementById('rewarded-ad-modal').classList.remove('view-hidden');
       startVideoPlayback();
@@ -236,25 +263,24 @@
     modal.innerHTML = `
       <div class="modal-card" style="max-width: 540px; text-align: center;">
         <div class="modal-header">
-          <h3 class="modal-title" style="color: #fbbf24;">🎬 Vidéo Récompensée Start.io</h3>
+          <h3 class="modal-title" style="color: #fbbf24;">${modalTitle}</h3>
           <span class="key-pill" id="rewarded-timer" style="color: #ffffff; background: #e53e3e;">6s</span>
         </div>
         <div class="modal-body" style="padding: 24px;">
           <div class="rewarded-video-screen" id="rewarded-screen">
             <div class="rewarded-pulse-circle">▶</div>
             <div style="margin-top: 16px;">
-              <h4 style="color: #fff; margin-bottom: 6px;">Visionnage de l'annonce partenaire...</h4>
-              <p style="color: #94a3b8; font-size: 0.88rem;">Regardez cette vidéo pendant encore quelques secondes pour débloquer votre récompense VIP !</p>
+              <h4 style="color: #fff; margin-bottom: 6px;">${screenTitle}</h4>
+              <p style="color: #94a3b8; font-size: 0.88rem;">${screenDesc}</p>
             </div>
             <div class="doc-progress-bar" style="margin-top: 20px; height: 8px;">
               <div class="doc-progress-fill" id="rewarded-progress" style="width: 0%; background: linear-gradient(90deg, #f59e0b, #10b981);"></div>
             </div>
           </div>
         </div>
-        <div class="modal-footer" style="justify-content: space-between;">
-          <span style="font-size: 0.82rem; color: #64748b; align-self: center;">App ID : ${STARTIO_CONFIG.appId}</span>
+        <div class="modal-footer" style="justify-content: flex-end;">
           <button class="btn btn-outline" id="btn-skip-rewarded" disabled style="opacity: 0.5;">
-            Passer dans 6s
+            ${skipLabel} 6s
           </button>
         </div>
       </div>
@@ -265,6 +291,8 @@
   }
 
   function startVideoPlayback() {
+    const en = isEnglish();
+    const skipLabel = en ? 'Skip in' : 'Passer dans';
     let timeLeft = STARTIO_CONFIG.rewardedDurationSec;
     const timerBadge = document.getElementById('rewarded-timer');
     const progressBar = document.getElementById('rewarded-progress');
@@ -273,13 +301,13 @@
 
     skipBtn.disabled = true;
     skipBtn.style.opacity = '0.5';
-    skipBtn.textContent = `Passer dans ${timeLeft}s`;
+    skipBtn.textContent = `${skipLabel} ${timeLeft}s`;
 
     const totalTime = timeLeft;
     const interval = setInterval(() => {
       timeLeft--;
       if (timerBadge) timerBadge.textContent = `${timeLeft}s`;
-      if (skipBtn) skipBtn.textContent = `Passer dans ${timeLeft}s`;
+      if (skipBtn) skipBtn.textContent = `${skipLabel} ${timeLeft}s`;
 
       const progress = Math.round(((totalTime - timeLeft) / totalTime) * 100);
       if (progressBar) progressBar.style.width = `${progress}%`;
@@ -292,9 +320,10 @@
   }
 
   function onVideoRewardCompleted(modal, skipBtn, timerBadge) {
+    const en = isEnglish();
     STARTIO_CONFIG.hasUnlockedVip = true;
     if (timerBadge) {
-      timerBadge.textContent = 'Complété !';
+      timerBadge.textContent = en ? 'Completed!' : 'Complété !';
       timerBadge.style.background = '#10b981';
     }
 
@@ -302,13 +331,13 @@
       skipBtn.disabled = false;
       skipBtn.style.opacity = '1';
       skipBtn.className = 'btn btn-primary';
-      skipBtn.textContent = 'Récupérer ma récompense 🎁';
+      skipBtn.textContent = en ? 'Claim VIP Reward 🎁' : 'Récupérer mon bonus VIP 🎁';
       skipBtn.focus();
 
       skipBtn.onclick = () => {
         modal.classList.add('view-hidden');
         if (window.showToast) {
-          window.showToast('🎉 Félicitations ! Bonus VIP Débloqué (Mode sans pub & Haute Qualité)');
+          window.showToast(en ? '🎉 VIP Bonus Unlocked! Enjoy HD reading.' : '🎉 Félicitations ! Bonus VIP Débloqué.');
         }
       };
     }
