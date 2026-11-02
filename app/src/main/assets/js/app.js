@@ -35,7 +35,8 @@
     settings: {
       defaultZoom: 1.0,
       filter: 'normal',
-      fitMode: 'width'
+      fitMode: 'width',
+      lang: (navigator.language && navigator.language.startsWith('en')) ? 'en' : 'fr'
     }
   };
 
@@ -43,6 +44,8 @@
   const dom = {
     app: document.getElementById('app'),
     topHeader: document.getElementById('top-header'),
+    btnLang: document.getElementById('btn-lang'),
+    langLabel: document.getElementById('lang-label'),
     homeView: document.getElementById('home-view'),
     readerView: document.getElementById('reader-view'),
     fileInput: document.getElementById('file-input'),
@@ -107,6 +110,183 @@
   }
 
   // =========================================================================
+  // INTERNATIONALISATION (i18n) - FRANÇAIS & ANGLAIS
+  // =========================================================================
+  const I18N = {
+    fr: {
+      langCode: "FR",
+      nextLang: "EN",
+      switchTooltip: "Switch to English",
+      btnPrev: "Préc.",
+      btnNext: "Suiv.",
+      btnFit: "Ajuster",
+      btnLibrary: "Bibliothèque",
+      btnOpen: "Ouvrir PDF",
+      heroTag: "Android TV & Tablet Edition",
+      heroTitle: "PDF & Document Reader for TV & Tablet",
+      heroSubtitle: "Lisez vos manuels, revues et documents PDF en grand écran. Navigation fluide 100% adaptée aux télécommandes TV, zoom haute fidélité et confort visuel nocturne.",
+      btnHeroOpen: "Sélectionner un document PDF",
+      btnHeroHelp: "Guide Télécommande TV",
+      tvBadgeTitle: "Navigation D-Pad",
+      tvBadgeDesc: "Touches Flèches & Bouton OK",
+      dropzoneTitle: "Ouvrir un document depuis la mémoire locale ou USB",
+      dropzoneDesc: "Cliquez ou appuyez sur OK pour parcourir le stockage de votre appareil (Android TV, TV Box, Tablette ou Clé USB).",
+      sectionRecentsTitle: "Documents Récents & Guides",
+      noRecentTitle: "Aucun document récent",
+      noRecentDesc: "Ouvrez un document PDF ou lisez l'un des guides intégrés ci-dessus.",
+      tagBuiltin: "GUIDE INTÉGRÉ",
+      tagLocal: "PDF LOCAL",
+      progress: "Progression",
+      thumbnailsTitle: "Miniatures",
+      floatPrev: "◄ Préc",
+      floatNext: "Suiv ►",
+      modalHelpTitle: "Commandes Télécommande Android TV & Clavier",
+      modalCloseBtn: "Compris",
+      toastSwitched: "Langue changée : Français 🇫🇷",
+      toastRemoved: "Document retiré des récents",
+      toastFitWidth: "Ajusté à la largeur",
+      toastFitPage: "Ajusté à la page entière",
+      filterNames: {
+        normal: "Couleurs standard",
+        night: "Mode Nuit (Inversé Sombre)",
+        sepia: "Mode Sépia (Repos visuel)",
+        highcontrast: "Contraste renforcé"
+      }
+    },
+    en: {
+      langCode: "EN",
+      nextLang: "FR",
+      switchTooltip: "Passer en Français",
+      btnPrev: "Prev",
+      btnNext: "Next",
+      btnFit: "Fit",
+      btnLibrary: "Library",
+      btnOpen: "Open PDF",
+      heroTag: "Android TV & Tablet Edition",
+      heroTitle: "PDF & Document Reader for TV & Tablet",
+      heroSubtitle: "Read your manuals, guides, books, and PDF documents on the big screen. Smooth 100% remote D-pad navigation, high-definition zoom, and dark mode eye comfort.",
+      btnHeroOpen: "Select a PDF Document",
+      btnHeroHelp: "TV Remote Guide",
+      tvBadgeTitle: "D-Pad Navigation",
+      tvBadgeDesc: "Arrow Keys & OK Button",
+      dropzoneTitle: "Open a document from local storage or USB drive",
+      dropzoneDesc: "Click or press OK to browse your device storage (Android TV, TV Box, Tablet, or USB flash drive).",
+      sectionRecentsTitle: "Recent Documents & Guides",
+      noRecentTitle: "No recent documents",
+      noRecentDesc: "Open a PDF document or read one of the built-in guides above.",
+      tagBuiltin: "BUILT-IN GUIDE",
+      tagLocal: "LOCAL PDF",
+      progress: "Progress",
+      thumbnailsTitle: "Thumbnails",
+      floatPrev: "◄ Prev",
+      floatNext: "Next ►",
+      modalHelpTitle: "Android TV Remote & Keyboard Controls",
+      modalCloseBtn: "Got it",
+      toastSwitched: "Language switched to: English 🇺🇸",
+      toastRemoved: "Document removed from recents",
+      toastFitWidth: "Fit to screen width",
+      toastFitPage: "Fit to whole page",
+      filterNames: {
+        normal: "Standard Colors",
+        night: "Night Mode (Dark Inverted)",
+        sepia: "Sepia Mode (Eye Comfort)",
+        highcontrast: "High Contrast"
+      }
+    }
+  };
+
+  function t(key) {
+    const lang = state.settings.lang || 'fr';
+    return (I18N[lang] && I18N[lang][key]) || (I18N['fr'][key] || key);
+  }
+
+  function applyLanguage(lang, showNotification = false) {
+    state.settings.lang = lang;
+    const dict = I18N[lang] || I18N['fr'];
+    document.documentElement.lang = lang;
+
+    if (dom.langLabel) {
+      dom.langLabel.textContent = dict.nextLang;
+    }
+    if (dom.btnLang) {
+      dom.btnLang.title = dict.switchTooltip;
+    }
+
+    const prevSpan = dom.btnPrev ? dom.btnPrev.querySelector('span') : null;
+    if (prevSpan) prevSpan.textContent = dict.btnPrev;
+
+    const nextSpan = dom.btnNext ? dom.btnNext.querySelector('span') : null;
+    if (nextSpan) nextSpan.textContent = dict.btnNext;
+
+    const fitSpan = dom.btnZoomFit ? dom.btnZoomFit.querySelector('span') : null;
+    if (fitSpan) fitSpan.textContent = dict.btnFit;
+
+    const libSpan = dom.btnLibrary ? dom.btnLibrary.querySelector('span') : null;
+    if (libSpan) libSpan.textContent = dict.btnLibrary;
+
+    const openSpan = dom.btnOpen ? dom.btnOpen.querySelector('span') : null;
+    if (openSpan) openSpan.textContent = dict.btnOpen;
+
+    const heroTag = document.querySelector('.hero-tag');
+    if (heroTag) heroTag.textContent = dict.heroTag;
+
+    const heroTitle = document.querySelector('.hero-title');
+    if (heroTitle) heroTitle.textContent = dict.heroTitle;
+
+    const heroSubtitle = document.querySelector('.hero-subtitle');
+    if (heroSubtitle) heroSubtitle.textContent = dict.heroSubtitle;
+
+    const heroOpenSpan = dom.btnHeroOpen ? dom.btnHeroOpen.querySelector('span') : null;
+    if (heroOpenSpan) heroOpenSpan.textContent = dict.btnHeroOpen;
+
+    const heroHelpSpan = dom.btnFloatingHelp ? dom.btnFloatingHelp.querySelector('span') : null;
+    if (heroHelpSpan) heroHelpSpan.textContent = dict.btnHeroHelp;
+
+    const tvBadgeStrong = document.querySelector('.tv-badge-text strong');
+    if (tvBadgeStrong) tvBadgeStrong.textContent = dict.tvBadgeTitle;
+
+    const tvBadgeSpan = document.querySelector('.tv-badge-text span');
+    if (tvBadgeSpan) tvBadgeSpan.textContent = dict.tvBadgeDesc;
+
+    const dropTitle = document.querySelector('.drop-zone-title');
+    if (dropTitle) dropTitle.textContent = dict.dropzoneTitle;
+
+    const dropDesc = document.querySelector('.drop-zone-desc');
+    if (dropDesc) dropDesc.textContent = dict.dropzoneDesc;
+
+    const secTitle = document.querySelector('#section-recents-title span');
+    if (secTitle) secTitle.textContent = dict.sectionRecentsTitle;
+
+    const sideHeader = document.querySelector('.sidebar-header span');
+    if (sideHeader) sideHeader.textContent = dict.thumbnailsTitle;
+
+    const floatPrevSpan = dom.btnFloatingPrev ? dom.btnFloatingPrev.querySelector('span') : null;
+    if (floatPrevSpan) floatPrevSpan.textContent = dict.floatPrev;
+
+    const floatNextSpan = dom.btnFloatingNext ? dom.btnFloatingNext.querySelector('span') : null;
+    if (floatNextSpan) floatNextSpan.textContent = dict.floatNext;
+
+    const modalTitle = document.getElementById('modal-help-title');
+    if (modalTitle) modalTitle.textContent = dict.modalHelpTitle;
+
+    const modalBtn = document.querySelector('.modal-footer .btn');
+    if (modalBtn) modalBtn.textContent = dict.modalCloseBtn;
+
+    renderRecentsGrid();
+
+    if (showNotification) {
+      showToast(dict.toastSwitched);
+    }
+  }
+
+  function toggleLanguage() {
+    const current = state.settings.lang || 'fr';
+    const next = current === 'fr' ? 'en' : 'fr';
+    applyLanguage(next, true);
+    saveSettings();
+  }
+
+  // =========================================================================
   // GESTION DU STOCKAGE LOCAL (LocalStorage)
   // =========================================================================
   function loadSettings() {
@@ -118,6 +298,7 @@
         state.fitMode = state.settings.fitMode || 'width';
         applyColorFilter(state.currentFilter);
       }
+      applyLanguage(state.settings.lang || 'fr', false);
     } catch (e) {
       console.warn('Erreur lecture LocalStorage:', e);
     }
@@ -208,8 +389,8 @@
     if (state.recentDocs.length === 0) {
       dom.recentList.innerHTML = `
         <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted);">
-          <p style="font-size: 1.1rem; margin-bottom: 8px;">Aucun document récent</p>
-          <p style="font-size: 0.9rem;">Ouvrez un document PDF ou lisez l'un des guides intégrés ci-dessus.</p>
+          <p style="font-size: 1.1rem; margin-bottom: 8px;">${t('noRecentTitle')}</p>
+          <p style="font-size: 0.9rem;">${t('noRecentDesc')}</p>
         </div>
       `;
       return;
@@ -233,7 +414,7 @@
           <div class="doc-meta">
             <h4 class="doc-title" title="${doc.title}">${doc.title}</h4>
             <div class="doc-info">
-              <span>${doc.date || 'Récemment'}</span>
+              <span>${doc.date || (state.settings.lang === 'en' ? 'Recently' : 'Récemment')}</span>
               <span>•</span>
               <span>Page ${doc.lastPage || 1} / ${doc.totalPages || '?'}</span>
             </div>
@@ -244,12 +425,12 @@
             <div class="doc-progress-fill" style="width: ${percent}%;"></div>
           </div>
           <div class="doc-progress-text">
-            <span>Progression</span>
+            <span>${t('progress')}</span>
             <span>${percent}%</span>
           </div>
         </div>
         <div class="doc-card-bottom">
-          <span class="doc-tag">${isGuide ? 'GUIDE INTÉGRÉ' : 'PDF LOCAL'}</span>
+          <span class="doc-tag">${isGuide ? t('tagBuiltin') : t('tagLocal')}</span>
           <button class="doc-delete-btn" title="Supprimer de l'historique" aria-label="Supprimer">
             <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
           </button>
@@ -912,6 +1093,9 @@
     if (dom.btnFilter) dom.btnFilter.addEventListener('click', cycleColorFilter);
     if (dom.btnThumbnails) dom.btnThumbnails.addEventListener('click', toggleThumbnails);
     if (dom.btnFullscreen) dom.btnFullscreen.addEventListener('click', toggleFullscreen);
+
+    // Changement de Langue FR / EN
+    if (dom.btnLang) dom.btnLang.addEventListener('click', toggleLanguage);
 
     // Modale Aide Raccourcis
     if (dom.btnHelp) {
