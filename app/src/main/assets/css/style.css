@@ -1,0 +1,1019 @@
+/* ==========================================================================
+   PDF & DOCUMENT READER FOR TV & TABLET
+   Thème sombre moderne, 10-foot UI pour Android TV et Responsive Tablette
+   ========================================================================== */
+
+:root {
+  --bg-primary: #0b0e14;
+  --bg-surface: #131822;
+  --bg-surface-elevated: #1b2230;
+  --bg-card: #18202d;
+  --bg-card-hover: #222d3e;
+  
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  
+  --accent-primary: #e53e3e; /* Rouge Document / Marque-page */
+  --accent-primary-hover: #f56565;
+  --accent-blue: #3b82f6;
+  --accent-blue-hover: #60a5fa;
+  --accent-teal: #06b6d4;
+  
+  --focus-ring: #38bdf8;
+  --focus-glow: rgba(56, 189, 248, 0.45);
+  
+  --border-subtle: #263346;
+  --border-focus: #38bdf8;
+  
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-pill: 9999px;
+  
+  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-elevated: 0 16px 36px rgba(0, 0, 0, 0.6);
+  --shadow-focus: 0 0 0 4px var(--focus-glow), 0 0 20px var(--focus-ring);
+  
+  /* TV Overscan safe margin (5% padding on TV) */
+  --tv-safe-padding: clamp(16px, 3vw, 40px);
+  --header-height: 72px;
+}
+
+/* Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* TV Focus Outline - Visible de loin (Règle des 3 mètres) */
+:focus-visible,
+.focused {
+  outline: 3px solid var(--focus-ring) !important;
+  outline-offset: 3px !important;
+  box-shadow: var(--shadow-focus) !important;
+  transform: scale(1.03);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, outline 0.15s ease;
+  z-index: 10;
+}
+
+/* App Container */
+#app {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ==========================================================================
+   Header & Toolbar
+   ========================================================================== */
+.top-header {
+  height: var(--header-height);
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--tv-safe-padding);
+  z-index: 50;
+  flex-shrink: 0;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.top-header.hidden-toolbar {
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: inherit;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+}
+
+.brand-icon {
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, var(--accent-primary), #991b1b);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(229, 62, 62, 0.4);
+}
+
+.brand-icon svg {
+  width: 22px;
+  height: 22px;
+  fill: #ffffff;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.brand-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+.brand-badge {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-teal);
+  font-weight: 600;
+}
+
+.header-center {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Boutons UI */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 18px;
+  border-radius: var(--radius-pill);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: var(--bg-surface-elevated);
+  color: var(--text-primary);
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  background: var(--bg-card-hover);
+  color: #ffffff;
+}
+
+.btn-icon-only {
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-primary), #b91c1c);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(229, 62, 62, 0.35);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--accent-primary-hover), #dc2626);
+  box-shadow: 0 6px 18px rgba(229, 62, 62, 0.5);
+}
+
+.btn-outline {
+  background: transparent;
+  border-color: var(--border-subtle);
+}
+
+.btn-outline:hover {
+  background: var(--bg-surface-elevated);
+  border-color: var(--text-muted);
+}
+
+.btn-active {
+  background: var(--accent-blue) !important;
+  color: #ffffff !important;
+  border-color: var(--accent-blue-hover) !important;
+}
+
+.btn svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  flex-shrink: 0;
+}
+
+/* Groupe de pagination & zoom dans la barre */
+.nav-pill-group {
+  display: inline-flex;
+  align-items: center;
+  background: var(--bg-surface-elevated);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-subtle);
+  padding: 2px 4px;
+}
+
+.nav-pill-group .btn {
+  background: transparent;
+  border: none;
+  min-height: 40px;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: var(--radius-pill);
+}
+
+.nav-pill-group .btn:hover {
+  background: var(--bg-card-hover);
+}
+
+.page-indicator {
+  padding: 0 14px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+
+.page-indicator input {
+  width: 44px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-subtle);
+  color: #ffffff;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 2px 0;
+}
+
+/* ==========================================================================
+   Vue 1 : Accueil / Bibliothèque de Documents
+   ========================================================================== */
+.view {
+  flex: 1;
+  width: 100%;
+  height: calc(100% - var(--header-height));
+  position: relative;
+  overflow: hidden;
+}
+
+.view-hidden {
+  display: none !important;
+}
+
+.home-scroll-container {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  padding: var(--tv-safe-padding);
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  scroll-behavior: smooth;
+}
+
+/* Bannière d'accueil TV */
+.hero-banner {
+  background: linear-gradient(135deg, #162032 0%, #1a162b 50%, #1e1b2e 100%);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 32px 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-banner::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.hero-content {
+  max-width: 640px;
+  z-index: 2;
+}
+
+.hero-tag {
+  display: inline-block;
+  background: rgba(229, 62, 62, 0.2);
+  color: #f87171;
+  border: 1px solid rgba(229, 62, 62, 0.35);
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.hero-title {
+  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  margin-bottom: 12px;
+  color: #ffffff;
+}
+
+.hero-subtitle {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.hero-tv-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  position: relative;
+}
+
+.tv-badge-pill {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid var(--border-subtle);
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.tv-badge-icon {
+  font-size: 1.8rem;
+}
+
+.tv-badge-text {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+
+.tv-badge-text strong {
+  display: block;
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+/* Sections de documents */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-title svg {
+  width: 22px;
+  height: 22px;
+  fill: var(--accent-blue);
+}
+
+/* Grille de documents récents & intégrés */
+.doc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.doc-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 200px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.doc-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-focus);
+}
+
+.doc-card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.doc-icon-wrapper {
+  width: 48px;
+  height: 54px;
+  background: linear-gradient(145deg, #ef4444, #991b1b);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+}
+
+.doc-icon-wrapper.guide-icon {
+  background: linear-gradient(145deg, #0ea5e9, #0369a1);
+  box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);
+}
+
+.doc-icon-wrapper svg {
+  width: 26px;
+  height: 26px;
+  fill: #ffffff;
+}
+
+.doc-meta {
+  flex: 1;
+  overflow: hidden;
+}
+
+.doc-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 6px;
+}
+
+.doc-info {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.doc-progress-container {
+  margin-top: 14px;
+}
+
+.doc-progress-bar {
+  width: 100%;
+  height: 6px;
+  background: var(--bg-surface);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.doc-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-teal));
+  border-radius: 3px;
+  width: 0%;
+}
+
+.doc-progress-text {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  display: flex;
+  justify-content: space-between;
+}
+
+.doc-card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.doc-tag {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent-teal);
+  text-transform: uppercase;
+}
+
+.doc-delete-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.doc-delete-btn:hover {
+  color: var(--accent-primary);
+  background: rgba(229, 62, 62, 0.15);
+}
+
+.doc-delete-btn svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+/* Zone d'importation / Drag & Drop */
+.drop-zone {
+  border: 2px dashed var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 36px 20px;
+  text-align: center;
+  cursor: pointer;
+  background: rgba(19, 24, 34, 0.6);
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.drop-zone:hover,
+.drop-zone.dragover {
+  border-color: var(--accent-blue);
+  background: rgba(30, 41, 59, 0.8);
+}
+
+.drop-zone svg {
+  width: 48px;
+  height: 48px;
+  fill: var(--accent-blue);
+}
+
+.drop-zone-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.drop-zone-desc {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  max-width: 500px;
+}
+
+/* ==========================================================================
+   Vue 2 : Lecteur de Document (Reader Screen)
+   ========================================================================== */
+#reader-view {
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: calc(100% - var(--header-height));
+  background-color: var(--bg-primary);
+}
+
+#reader-view.fullscreen-active {
+  height: 100vh;
+}
+
+/* Volet latéral de miniatures */
+.thumbnails-sidebar {
+  width: 240px;
+  height: 100%;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s ease, width 0.25s ease;
+  z-index: 40;
+  flex-shrink: 0;
+}
+
+.thumbnails-sidebar.collapsed {
+  transform: translateX(-100%);
+  width: 0;
+  border-right: none;
+  visibility: hidden;
+}
+
+.sidebar-header {
+  padding: 16px 20px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--text-secondary);
+}
+
+.thumbnails-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.thumb-item {
+  background: var(--bg-card);
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 6px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s ease;
+}
+
+.thumb-item:hover,
+.thumb-item.active {
+  border-color: var(--accent-blue);
+  background: var(--bg-card-hover);
+}
+
+.thumb-item canvas {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  display: block;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+.thumb-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+/* Zone d'affichage du PDF */
+.pdf-viewport {
+  flex: 1;
+  height: 100%;
+  overflow: auto;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 24px;
+  background-color: var(--bg-primary);
+  scroll-behavior: smooth;
+}
+
+.pdf-canvas-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+  transition: filter 0.2s ease;
+  min-height: 200px;
+}
+
+#pdf-canvas {
+  display: block;
+  max-width: 100%;
+  background: #ffffff;
+  border-radius: 4px;
+}
+
+/* Filtres de confort de lecture */
+.filter-normal { filter: none; }
+.filter-night { filter: invert(0.9) hue-rotate(180deg) brightness(0.9) contrast(1.1); }
+.filter-sepia { filter: sepia(0.55) contrast(1.05) brightness(0.95); }
+.filter-highcontrast { filter: contrast(1.35) brightness(1.05); }
+
+/* Indicateur OSD (On-Screen Display) discret */
+.reader-osd {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--border-subtle);
+  color: #ffffff;
+  padding: 8px 24px;
+  border-radius: var(--radius-pill);
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.reader-osd.visible {
+  opacity: 1;
+}
+
+/* Télécommande TV flottante en bas de l'écran (Accessible avec D-Pad) */
+.tv-remote-bar {
+  position: absolute;
+  bottom: 24px;
+  right: var(--tv-safe-padding);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(19, 24, 34, 0.9);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle);
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-elevated);
+  z-index: 60;
+  opacity: 0.9;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.tv-remote-bar:hover,
+.tv-remote-bar:focus-within {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.tv-remote-bar .btn {
+  min-height: 40px;
+  height: 40px;
+  padding: 0 12px;
+  font-size: 0.88rem;
+}
+
+/* Spinner de chargement */
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(11, 14, 20, 0.85);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  z-index: 70;
+  backdrop-filter: blur(4px);
+}
+
+.spinner {
+  width: 52px;
+  height: 52px;
+  border: 4px solid var(--border-subtle);
+  border-top-color: var(--accent-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   Modales & Aide Raccourcis Télécommande
+   ========================================================================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+}
+
+.modal-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  max-width: 680px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-elevated);
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  padding: 24px 28px;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.modal-body {
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.shortcut-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.shortcut-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-card);
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.shortcut-desc {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+}
+
+.key-pill {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent-teal);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.modal-footer {
+  padding: 20px 28px;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Toast Notifications */
+.toast-container {
+  position: fixed;
+  top: 24px;
+  right: var(--tv-safe-padding);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 120;
+  pointer-events: none;
+}
+
+.toast {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-focus);
+  color: #ffffff;
+  padding: 12px 20px;
+  border-radius: var(--radius-pill);
+  font-size: 0.95rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-elevated);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: slideIn 0.25s ease-out;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(50px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* ==========================================================================
+   Responsive & Adaptation TV / Tablette
+   ========================================================================== */
+
+/* Mode TV 16:9 grand écran */
+@media screen and (min-width: 1200px) {
+  :root {
+    --header-height: 80px;
+  }
+  .btn {
+    min-height: 52px;
+    font-size: 1.05rem;
+    padding: 0 22px;
+  }
+  .btn-icon-only {
+    width: 52px;
+    height: 52px;
+  }
+  .doc-title {
+    font-size: 1.15rem;
+  }
+}
+
+/* Mode Tablette Portrait & Écrans Moyens */
+@media screen and (max-width: 768px) {
+  .hero-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 24px;
+  }
+  .hero-tv-preview {
+    display: none;
+  }
+  .header-center {
+    display: none;
+  }
+  .tv-remote-bar {
+    bottom: 16px;
+    right: 16px;
+    left: 16px;
+    justify-content: space-around;
+  }
+}
+
+/* Masquage barre de défilement pour TV esthétique */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bg-surface-elevated);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}

@@ -1,0 +1,6 @@
+{
+  "name": "DocReader TV",
+  "description": "PDF & Document Reader for Android TV, TV Box, Tablet and Web with D-pad remote controls, zoom, and offline reading.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
