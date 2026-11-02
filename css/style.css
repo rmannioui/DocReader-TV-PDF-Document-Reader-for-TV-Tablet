@@ -1017,3 +1017,222 @@ html, body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
 }
+
+/* ==========================================================================
+   STYLES PUBLICITAIRES START.IO (App ID: 210453717)
+   ========================================================================== */
+
+/* 1. Bannière Pub (Banner Ads) */
+.ad-banner-box {
+  width: 100%;
+  max-width: 820px;
+  background: linear-gradient(135deg, #131d2e 0%, #172338 100%);
+  border: 1px solid #2d4160;
+  border-radius: var(--radius-md);
+  padding: 12px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ad-banner-box:hover,
+.ad-banner-box:focus {
+  border-color: #38bdf8;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(56, 189, 248, 0.25);
+}
+
+.ad-banner-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #38bdf8;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ad-banner-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.ad-banner-icon {
+  font-size: 1.8rem;
+}
+
+.ad-banner-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.ad-banner-text strong {
+  font-size: 0.95rem;
+  color: #ffffff;
+}
+
+.ad-banner-text span {
+  font-size: 0.82rem;
+  color: #94a3b8;
+}
+
+.ad-banner-cta {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  padding: 8px 18px;
+  border-radius: var(--radius-pill);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+}
+
+/* 2. Annonce Native (Native Ads) */
+.ad-native-card {
+  border: 1px dashed rgba(56, 189, 248, 0.5) !important;
+  background: linear-gradient(145deg, #131c2b, #182336) !important;
+}
+
+.ad-icon-wrapper {
+  background: linear-gradient(135deg, #0284c7, #0369a1) !important;
+}
+
+.ad-badge-native {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #38bdf8;
+  letter-spacing: 0.06em;
+  margin-bottom: 2px;
+}
+
+.ad-native-body {
+  font-size: 0.82rem;
+  color: #94a3b8;
+  line-height: 1.4;
+  margin: 8px 0;
+}
+
+/* 3. Message Publicitaire Flottant (In-Chat Ads) */
+.inchat-ad-widget {
+  position: fixed;
+  bottom: 24px;
+  left: var(--tv-safe-padding);
+  z-index: 90;
+}
+
+.inchat-bubble {
+  background: #1e293b;
+  border: 1px solid #3b82f6;
+  border-radius: var(--radius-pill);
+  padding: 8px 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.inchat-bubble:hover,
+.inchat-bubble:focus {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
+}
+
+.inchat-pulse {
+  width: 10px;
+  height: 10px;
+  background: #10b981;
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.inchat-icon { font-size: 1.1rem; }
+.inchat-label { font-size: 0.85rem; font-weight: 700; color: #ffffff; }
+
+.inchat-popover {
+  position: absolute;
+  bottom: 54px;
+  left: 0;
+  width: 290px;
+  background: #162032;
+  border: 1px solid #334155;
+  border-radius: var(--radius-md);
+  padding: 16px;
+  box-shadow: var(--shadow-elevated);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.inchat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.inchat-header-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #38bdf8;
+}
+
+.inchat-body {
+  font-size: 0.82rem;
+  color: #cbd5e1;
+  line-height: 1.4;
+}
+
+.inchat-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* 4. Vidéo Récompensée (Rewarded Video Ads) */
+.rewarded-video-screen {
+  background: #090d16;
+  border: 1px solid #1e293b;
+  border-radius: var(--radius-md);
+  padding: 36px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.rewarded-pulse-circle {
+  width: 68px;
+  height: 68px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 1.8rem;
+  box-shadow: 0 0 25px rgba(245, 158, 11, 0.5);
+  animation: pulse-reward 1.5s infinite;
+}
+
+@keyframes pulse-reward {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
